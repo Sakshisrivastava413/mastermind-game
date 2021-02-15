@@ -1,8 +1,11 @@
 import Head from "next/head";
 import Game from "../components/Game";
 import ColorPalette from "../components/ColorPalette";
+import { useState } from "react";
 
 export default function Home() {
+  const [selectedColor, setSelectedColor] = useState("");
+
   return (
     <div>
       <Head>
@@ -12,10 +15,14 @@ export default function Home() {
 
       <div className="flex m-10">
         <div className="w-1/3">
-          <ColorPalette />
+          <ColorPalette
+            selectedColor={(color) => {
+              setSelectedColor(color);
+            }}
+          />
         </div>
         <div className="border border-black h-auto w-1/3 p-4 space-y-2">
-          <Game />
+          <Game color={selectedColor} />
         </div>
       </div>
     </div>
