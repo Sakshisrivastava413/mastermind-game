@@ -39,9 +39,9 @@ const Game = ({ pickedColor }) => {
       {grid.map((row, rowNo) => (
         <div
           key={rowNo}
-          className={`border ${
-            currentRow == rowNo ? "border-black" : "border-red-500"
-          } h-14 w-full p-2 relative`}
+          className={`${
+            currentRow == rowNo ? "border-2" : "border"
+          } border-black h-14 w-full p-2 relative`}
         >
           <Row
             colors={row}
