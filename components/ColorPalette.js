@@ -10,8 +10,9 @@ const ColorPalette = ({ selectedColor }) => {
 
   return (
     <div>
-      {colors.map((color) => (
+      {colors.map((color, colNo) => (
         <div
+          key={colNo}
           className={`h-10 w-10 rounded-full border ${
             picked == color ? "border-black" : ""
           }`}

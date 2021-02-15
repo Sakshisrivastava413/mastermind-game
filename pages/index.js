@@ -22,7 +22,7 @@ export default function Home() {
           />
         </div>
         <div className="border border-black h-auto w-1/3 p-4 space-y-2">
-          <Game color={selectedColor} />
+          <Game pickedColor={selectedColor} />
         </div>
       </div>
     </div>
