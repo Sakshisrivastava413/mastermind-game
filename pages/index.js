@@ -15,16 +15,23 @@ export default function Home() {
       </Head>
 
       <Header />
-      <div className="flex m-10">
-        <div className="w-1/3">
-          <ColorPalette
-            selectedColor={(color) => {
-              setSelectedColor(color);
-            }}
-          />
-        </div>
-        <div className="border border-black h-auto w-1/3 p-4 space-y-2">
-          <Game pickedColor={selectedColor} />
+      <div className="flex justify-center bg-gray-400">
+        <div className="bg-gray-100 w-2/4 flex">
+          <div className="p-4 w-96 pr-0">
+            <div className="bg-white">
+              <ColorPalette
+                selectedColor={(color) => {
+                  setSelectedColor(color);
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="w-full p-4">
+            <div className="border border-black bg-white p-4">
+              <Game pickedColor={selectedColor} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
