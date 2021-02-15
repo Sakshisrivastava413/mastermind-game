@@ -29,6 +29,11 @@ const Game = ({ pickedColor }) => {
     }
   };
 
+  const checkRow = () => {
+    setCurrentRow(currentRow + 1);
+    setRowStatus(false);
+  };
+
   return (
     <div className="space-y-2">
       {grid.map((row, rowNo) => (
@@ -45,6 +50,11 @@ const Game = ({ pickedColor }) => {
             getCell={changeColor}
             status={gridStatus[rowNo]}
           />
+          {currentRow == rowNo && rowStatus && (
+            <div className="absolute left-64 inset-y-1/4">
+				<img onClick={checkRow} src="check.svg" className="h-6" />
+            </div>
+          )}
         </div>
       ))}
     </div>
