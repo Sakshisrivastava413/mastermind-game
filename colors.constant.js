@@ -1,10 +1,10 @@
 export const colors = [
-    '#4063FA', //blue
-    '#E74C3C', //red
-    '#28B463', //green
-    '#F4F124', //yellow
-    '#F545F3', //pink
-    '#45F5F5', //lignt-blue
-    '#895252', //brown
-    '#B4ADAD' // grey
+    '#5DADE2', //blue
+    '#F95A47', //red
+    '#76D7C4', //green
+    '#FFF866', //yellow
+    '#FC7DEF', //pink
+    '#F0B27A', //orange
+    '#CA6F1E', //brown
+    '#CACFD2' // grey
 ];
