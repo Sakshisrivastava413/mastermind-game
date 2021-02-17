@@ -15,7 +15,7 @@ const ColorPalette = ({ selectedColor }) => {
         {colors.map((color, colNo) => (
           <div
             key={colNo}
-            className={`h-10 w-10 rounded-full border-2 m-2 ${
+            className={`h-10 w-10 rounded-full border-2 m-2 cursor-pointer ${
               picked == color ? "border-black" : ""
             }`}
             style={{ background: `${color}` }}
