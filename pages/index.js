@@ -15,8 +15,8 @@ export default function Home() {
       </Head>
 
       <Header />
-      <div className="flex justify-center bg-gray-400">
-        <div className="bg-gray-100 w-2/4 flex">
+      <div className="bg-blue-200 flex justify-center">
+        <div className="bg-blue-200 w-2/4 flex">
           <div className="p-4 w-96 pr-0">
             <div className="bg-white">
               <ColorPalette
