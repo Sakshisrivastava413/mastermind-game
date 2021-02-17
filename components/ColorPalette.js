@@ -10,7 +10,7 @@ const ColorPalette = ({ selectedColor }) => {
 
   return (
     <>
-      <div className="text-xl px-4 pt-4">Pick any color:</div>
+      <div className="text-xl px-4 pt-4 text-center font-mono">Color choices</div>
       <div className="flex flex-wrap justify-center p-4">
         {colors.map((color, colNo) => (
           <div
