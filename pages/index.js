@@ -23,48 +23,46 @@ const Home = () => {
 
       <Header />
       <div
-        className="bg-blue-200 flex justify-center pt-5"
+        className="bg-blue-200 flex flex-wrap justify-center pt-5"
         style={{ minHeight: "calc(100vh - 4rem)" }}
       >
-        <div className="bg-blue-200 flex flex-wrap justify-center">
-          <div className="p-4 pr-0 w-72 space-y-2">
-            <div className="bg-white border border-black">
-              <ColorPalette
-                selectedColor={selectedColor}
-                onColorSelected={setSelectedColor}
-              />
-            </div>
-            <div className="bg-white border border-black space-y-4 p-4 text-center">
-              <div
-                onClick={setNewGameModal}
-                className="text px-4 py-2 border rounded border-black cursor-pointer hover:text-white hover:bg-blue-400"
-              >
-                New Game
-              </div>
-              <Modal isOpen={newGameModal} onClose={setNewGameModal}>
-                <NewGame
-                  closeModal={setNewGameModal}
-                  resetGame={() => {
-                    gameRef.current.openNewGame(), setNewGameModal();
-                  }}
-                />
-              </Modal>
-              <div
-                onClick={setInstructionModal}
-                className="text px-4 py-2 border rounded border-black cursor-pointer hover:text-white hover:bg-blue-400"
-              >
-                Instructions
-              </div>
-              <Modal isOpen={instructionModal} onClose={setInstructionModal}>
-                <Instructions />
-              </Modal>
-            </div>
+        <div className="p-4 pr-0 w-72 space-y-2">
+          <div className="bg-white border border-black">
+            <ColorPalette
+              selectedColor={selectedColor}
+              onColorSelected={setSelectedColor}
+            />
           </div>
-
-          <div className="w-112 p-4">
-            <div className="border border-black bg-white p-4">
-              <Game selectedColor={selectedColor} ref={gameRef} />
+          <div className="bg-white border border-black space-y-4 p-4 text-center">
+            <div
+              onClick={setNewGameModal}
+              className="text px-4 py-2 border rounded border-black cursor-pointer hover:text-white hover:bg-blue-400"
+            >
+              New Game
             </div>
+            <Modal isOpen={newGameModal} onClose={setNewGameModal}>
+              <NewGame
+                closeModal={setNewGameModal}
+                resetGame={() => {
+                  gameRef.current.openNewGame(), setNewGameModal();
+                }}
+              />
+            </Modal>
+            <div
+              onClick={setInstructionModal}
+              className="text px-4 py-2 border rounded border-black cursor-pointer hover:text-white hover:bg-blue-400"
+            >
+              Instructions
+            </div>
+            <Modal isOpen={instructionModal} onClose={setInstructionModal}>
+              <Instructions />
+            </Modal>
+          </div>
+        </div>
+
+        <div className="w-112 p-4">
+          <div className="border border-black bg-white p-4">
+            <Game selectedColor={selectedColor} ref={gameRef} />
           </div>
         </div>
       </div>
