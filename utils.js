@@ -1,6 +1,6 @@
-import { random, isEqual } from "lodash";
+import { random } from "lodash";
 import availableColors from "./colors.constant";
-import { COL_SIZE, ROW_SIZE } from "./constants";
+import { COL_SIZE } from "./constants";
 
 const createRow = (cols, value) =>
   Array(cols)
@@ -21,10 +21,6 @@ const generateHiddenCode = () => {
     }
   }
   return hiddenCode;
-};
-
-const isGameOver = (curRowState, hiddenCode, currentRow) => {
-  return isEqual(hiddenCode, curRowState) || currentRow + 1 === ROW_SIZE;
 };
 
 const getRowStatus = (curRowState, hiddenCode) => {
@@ -59,6 +55,5 @@ export {
   createRow,
   createGrid,
   generateHiddenCode,
-  isGameOver,
   getRowStatus,
 };

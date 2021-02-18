@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { cloneDeep, random } from "lodash";
+import { cloneDeep, random, isEqual } from "lodash";
 import { INITIAL_CELL_VALUE, ROW_SIZE, COL_SIZE } from "../constants";
 import {
   createGrid,
   generateHiddenCode,
   getRowStatus,
-  isGameOver,
   createRow,
 } from "../utils";
 import Row from "../components/Row";
@@ -20,8 +19,7 @@ const Game = ({ selectedColor, result }) => {
     createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE)
   );
   const [hiddenCode, setHiddenCode] = useState(generateHiddenCode());
-  useEffect(() => console.log(hiddenCode), []);
-
+useEffect(() => console.log(hiddenCode), [])
   const changeColor = ({ row, col }) => {
     if (currentRow !== row) return;
 
@@ -34,8 +32,13 @@ const Game = ({ selectedColor, result }) => {
   const validateRow = () => {
     const newGrid = cloneDeep(grid);
     const curRowState = newGrid[currentRow];
-    if (isGameOver(curRowState, hiddenCode, currentRow)) {
-      result();
+    const nextRow = currentRow + 1;
+    const resultState = { rowsCovered: nextRow, hiddenCode };
+    if (isEqual(hiddenCode, curRowState)) {
+      result({ ...resultState, isWinner: true });
+      resetGame();
+    } else if (nextRow == ROW_SIZE) {
+      result({ ...resultState, isWinner: false });
       resetGame();
     } else {
       const [colorPosMatchCount, colorMatchCount] = getRowStatus(
@@ -43,7 +46,7 @@ const Game = ({ selectedColor, result }) => {
         hiddenCode
       );
       updateRowStatus(colorPosMatchCount, colorMatchCount);
-      setCurrentRow(currentRow + 1);
+      setCurrentRow(nextRow);
     }
     setRowValidate(false);
   };
