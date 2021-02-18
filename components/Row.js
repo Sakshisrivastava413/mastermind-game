@@ -26,7 +26,7 @@ const Row = ({ colors, onCellClick, row, status, activeRow }) => (
             style={{ background: color }}
           >
             {color === INITIAL_CELL_VALUE && row < activeRow && (
-              <img className="m-auto h-2" src="cancel.svg" />
+              <img className="m-auto h-2 mt-px" src="cancel.svg" />
             )}
           </div>
         ))}
