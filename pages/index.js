@@ -14,6 +14,15 @@ const Home = () => {
   const [newGameModal, setNewGameModal] = useModal(false);
   const [instructionModal, setInstructionModal] = useModal(false);
   const [resultModal, setResultModal] = useModal(false);
+  const [resultInfo, setResultInfo] = useState({
+    rowsCovered: 0,
+    hiddenCode: [],
+  });
+
+  const setResult = (result) => {
+    setResultInfo({ ...result });
+    setResultModal();
+  };
 
   return (
     <div>
@@ -56,11 +65,11 @@ const Home = () => {
 
           <div className="w-full p-4">
             <div className="border border-black bg-white p-4">
-              <Game selectedColor={selectedColor} result={setResultModal} />
+              <Game selectedColor={selectedColor} result={setResult} />
             </div>
           </div>
           <Modal isOpen={resultModal} onClose={setResultModal}>
-            <Result />
+            <Result result={resultInfo} />
           </Modal>
         </div>
       </div>
