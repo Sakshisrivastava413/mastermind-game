@@ -1,13 +1,16 @@
 import Head from "next/head";
+import { useState } from "react";
 import Game from "../components/Game";
 import ColorPalette from "../components/ColorPalette";
-import { useState } from "react";
 import Header from "../components/Header";
 import Modal from "../components/Modal";
+import useModal from "../hooks/useModal";
+import Instructions from "../components/Instructions";
+import Result from "../components/Result";
 
 const NewGame = () => {
   return (
-    <div className="p-8 font-mono text-center">
+    <div className="p-8 text-center">
       <div className="text-2xl">New Game</div>
       <div>No of rows: </div>
       <div>No of cols: </div>
@@ -16,32 +19,11 @@ const NewGame = () => {
   );
 };
 
-const Instructions = () => {
-  return (
-    <div className="p-8 font-mono">
-      <div className="text-2xl mb-4 text-center">Instructions</div>
-      <div>
-        Try to guess the pattern, in both order and color, within ten turns.
-        After submitting a row, a small black peg is placed for each code peg
-        from the guess which is correct in both color and position. A white peg
-        indicates the existence of a correct color code peg placed in the wrong
-        position.
-      </div>
-    </div>
-  );
-};
-
-const Result = () => (
-  <div className="p-8 font-mono">
-    <div className="text-4xl mb-4 text-center">You Won!!!</div>
-  </div>
-);
-
 const Home = () => {
   const [selectedColor, setSelectedColor] = useState("");
-  const [newGameModal, toggleNewGameModal] = useState(false);
-  const [instructionModal, toggleInstructionModal] = useState(false);
-  const [resultModal, toggleResultModal] = useState(false);
+  const [newGameModal, setNewGameModal] = useModal(false);
+  const [instructionModal, setInstructionModal] = useModal(false);
+  const [resultModal, setResultModal] = useModal(false);
 
   return (
     <div>
@@ -56,43 +38,40 @@ const Home = () => {
           <div className="p-4 w-96 pr-0 space-y-2">
             <div className="bg-white border border-black">
               <ColorPalette
-                selectedColor={(color) => {
-                  setSelectedColor(color);
-                }}
+                selectedColor={selectedColor}
+                onColorSelected={setSelectedColor}
               />
             </div>
             <div className="bg-white border border-black space-y-4 p-4 text-center">
               <div
-                onClick={() => toggleNewGameModal(true)}
-                className="text font-mono px-4 py-2 border rounded border-black cursor-pointer hover:text-white hover:bg-blue-400"
+                onClick={setNewGameModal}
+                className="text px-4 py-2 border rounded border-black cursor-pointer hover:text-white hover:bg-blue-400"
               >
                 New Game
               </div>
-              <Modal
-                status={newGameModal}
-                info={NewGame}
-                handleClose={() => toggleNewGameModal(false)}
-              ></Modal>
+              <Modal isOpen={newGameModal} onClose={setNewGameModal}>
+                <NewGame />
+              </Modal>
               <div
-                onClick={() => toggleInstructionModal(true)}
-                className="text font-mono px-4 py-2 border rounded border-black cursor-pointer hover:text-white hover:bg-blue-400"
+                onClick={setInstructionModal}
+                className="text px-4 py-2 border rounded border-black cursor-pointer hover:text-white hover:bg-blue-400"
               >
                 Instructions
               </div>
-              <Modal
-                status={instructionModal}
-                info={Instructions}
-                handleClose={() => toggleInstructionModal(false)}
-              ></Modal>
+              <Modal isOpen={instructionModal} onClose={setInstructionModal}>
+                <Instructions />
+              </Modal>
             </div>
           </div>
 
           <div className="w-full p-4">
             <div className="border border-black bg-white p-4">
-              <Game pickedColor={selectedColor} result={() => toggleResultModal(true)} />
+              <Game selectedColor={selectedColor} result={setResultModal} />
             </div>
           </div>
-          <Modal status={resultModal} info={Result} handleClose={() => toggleResultModal(false)} />
+          <Modal isOpen={resultModal} onClose={setResultModal}>
+            <Result />
+          </Modal>
         </div>
       </div>
     </div>
