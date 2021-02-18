@@ -6,9 +6,10 @@ const Modal = ({ isOpen, children, onClose }) => (
     isOpen={isOpen}
     onRequestClose={onClose}
     ariaHideApp={false}
-    className="absolute m-auto inset-0  h-96 w-96 border border-black outline-none"
+    className="absolute m-auto inset-0 w-112 outline-none"
+    style={{ content: { height: "max-content" } }}
   >
-    <div className="bg-white h-full">
+    <div className="relative bg-white border border-black">
       <div className="absolute top-4 right-4 cursor-pointer" onClick={onClose}>
         <img className="h-4" src="./cancel.svg" />
       </div>
