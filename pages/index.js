@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Game from "../components/Game";
 import ColorPalette from "../components/ColorPalette";
 import Header from "../components/Header";
@@ -12,7 +12,7 @@ const Home = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [newGameModal, setNewGameModal] = useModal(false);
   const [instructionModal, setInstructionModal] = useModal(false);
-
+  const gameRef = useRef();
   return (
     <div>
       <Head>
@@ -41,7 +41,12 @@ const Home = () => {
                 New Game
               </div>
               <Modal isOpen={newGameModal} onClose={setNewGameModal}>
-                <NewGame />
+                <NewGame
+                  closeModal={setNewGameModal}
+                  resetGame={() => {
+                    gameRef.current.openNewGame(), setNewGameModal();
+                  }}
+                />
               </Modal>
               <div
                 onClick={setInstructionModal}
@@ -57,7 +62,7 @@ const Home = () => {
 
           <div className="w-112 p-4">
             <div className="border border-black bg-white p-4">
-              <Game selectedColor={selectedColor} />
+              <Game selectedColor={selectedColor} ref={gameRef} />
             </div>
           </div>
         </div>

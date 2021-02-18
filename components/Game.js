@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { cloneDeep, random, isEqual } from "lodash";
 import { INITIAL_CELL_VALUE, ROW_SIZE, COL_SIZE } from "../constants";
 import {
@@ -12,7 +17,7 @@ import Row from "../components/Row";
 import Modal from "./Modal";
 import Result from "./Result";
 
-const Game = ({ selectedColor }) => {
+const Game = forwardRef(({ selectedColor }, ref) => {
   const [grid, setGrid] = useState(
     createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE)
   );
@@ -58,8 +63,8 @@ const Game = ({ selectedColor }) => {
       );
       updateRowStatus(colorPosMatchCount, colorMatchCount);
       setCurrentRow(nextRow);
+      setRowValidate(false);
     }
-    setRowValidate(false);
   };
 
   const updateRowStatus = (colorPosMatchCount, colorMatchCount) => {
@@ -92,7 +97,14 @@ const Game = ({ selectedColor }) => {
     setGridStatus(createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE));
     setCurrentRow(0);
     setHiddenCode(generateHiddenCode());
+    setRowValidate(false);
   };
+
+  useImperativeHandle(ref, () => ({
+    openNewGame() {
+      resetGame();
+    },
+  }));
 
   return (
     <div className="space-y-2">
@@ -126,6 +138,6 @@ const Game = ({ selectedColor }) => {
       </Modal>
     </div>
   );
-};
+});
 
 export default Game;
