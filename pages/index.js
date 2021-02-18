@@ -7,9 +7,10 @@ import Modal from "../components/Modal";
 import useModal from "../hooks/useModal";
 import Instructions from "../components/Instructions";
 import NewGame from "../components/NewGame";
+import colors from "../colors.constant";
 
 const Home = () => {
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [newGameModal, setNewGameModal] = useModal(false);
   const [instructionModal, setInstructionModal] = useModal(false);
   const gameRef = useRef();
