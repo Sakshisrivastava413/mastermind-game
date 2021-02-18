@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { colors } from "../colors.constant";
+import colors from "../colors.constant";
 
 const ColorPalette = ({ selectedColor }) => {
   const [picked, setPicked] = useState("");
