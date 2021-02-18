@@ -8,7 +8,12 @@ const Modal = ({ isOpen, children, onClose }) => (
     ariaHideApp={false}
     className="absolute m-auto inset-0  h-96 w-96 border border-black outline-none"
   >
-    <div className="bg-white h-full">{children}</div>
+    <div className="bg-white h-full">
+      <div className="absolute top-4 right-4 cursor-pointer" onClick={onClose}>
+        <img className="h-4" src="./cancel.svg" />
+      </div>
+      {children}
+    </div>
   </ReactModal>
 );
 
