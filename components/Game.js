@@ -1,106 +1,71 @@
 import React, { useState, useEffect } from "react";
+import { cloneDeep, random } from "lodash";
+import { INITIAL_CELL_VALUE, ROW_SIZE, COL_SIZE } from "../constants";
+import {
+  createGrid,
+  generateHiddenCode,
+  getRowStatus,
+  isGameOver,
+  createRow,
+} from "../utils";
 import Row from "../components/Row";
-import { isEqual, cloneDeep, random } from "lodash";
-import availableColors from "../colors.constant";
 
-const createGrid = (rows, cols, value) =>
-  Array(rows)
-    .fill(0)
-    .map(() => new Array(cols).fill(0).map(() => value));
-
-const getCode = () => {
-  const hiddenCode = [];
-  while (hiddenCode.length != 4) {
-    const color = availableColors[random(0, availableColors.length - 1)];
-    if (hiddenCode.indexOf(color) == -1) {
-      hiddenCode.push(color);
-    }
-  }
-  return hiddenCode;
-};
-
-const CELL_COLOR = "#fff";
-
-const Game = ({ pickedColor, result }) => {
-  const [grid, setGrid] = useState(createGrid(10, 4, CELL_COLOR));
+const Game = ({ selectedColor, result }) => {
+  const [grid, setGrid] = useState(
+    createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE)
+  );
   const [currentRow, setCurrentRow] = useState(0);
-  const [rowState, setRowDone] = useState(false);
-  const [gridStatus, setGridStatus] = useState(createGrid(10, 4, CELL_COLOR));
-  const [hiddenCode, generateHiddenCode] = useState(getCode());
+  const [isRowValidate, setRowValidate] = useState(false);
+  const [gridStatus, setGridStatus] = useState(
+    createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE)
+  );
+  const [hiddenCode, setHiddenCode] = useState(generateHiddenCode());
+  useEffect(() => console.log(hiddenCode), []);
 
   const changeColor = ({ row, col }) => {
-    if (currentRow == row) {
-      const newGrid = cloneDeep(grid);
-      newGrid[row][col] = pickedColor;
-      setGrid(newGrid);
-      if (newGrid[currentRow].indexOf(CELL_COLOR) == -1) setRowDone(true);
-    }
-  };
+    if (currentRow !== row) return;
 
-  const checkRow = () => {
-    const [colorPosMatch, colorMatch] = getRowStatus();
-    updateRowStatus(colorPosMatch, colorMatch);
-    setRowDone(false);
-  };
-
-  const getRowStatus = () => {
     const newGrid = cloneDeep(grid);
-    const curRow = newGrid[currentRow];
-    const nextRow = currentRow + 1;
-    let colorAndPositionMatchCount = 0;
-    let onlyColorMatchCount = 0;
-    const colorFreq = new Map();
+    newGrid[row][col] = selectedColor;
+    setGrid(newGrid);
+    if (!newGrid[currentRow].includes(INITIAL_CELL_VALUE)) setRowValidate(true);
+  };
 
-    if (isEqual(hiddenCode, curRow) || nextRow == 10) {
+  const validateRow = () => {
+    const newGrid = cloneDeep(grid);
+    const curRowState = newGrid[currentRow];
+    if (isGameOver(curRowState, hiddenCode, currentRow)) {
       result();
       resetGame();
     } else {
-      setCurrentRow(nextRow);
-
-      curRow.forEach((color, col) => {
-        const hiddenCodeColor = hiddenCode[col];
-        if (hiddenCodeColor === color) colorAndPositionMatchCount++;
-        else
-          colorFreq.set(
-            hiddenCodeColor,
-            colorFreq.has(hiddenCodeColor)
-              ? colorFreq.get(hiddenCodeColor) + 1
-              : 1
-          );
-      });
-
-      curRow.forEach((color, col) => {
-        if (
-          colorFreq.has(color) &&
-          colorFreq.get(color) > 0 &&
-          color != hiddenCode[col]
-        ) {
-          colorFreq.set(color, colorFreq.get(color) - 1);
-          onlyColorMatchCount++;
-        }
-      });
+      const [colorPosMatchCount, colorMatchCount] = getRowStatus(
+        curRowState,
+        hiddenCode
+      );
+      updateRowStatus(colorPosMatchCount, colorMatchCount);
+      setCurrentRow(currentRow + 1);
     }
-    return [colorAndPositionMatchCount, onlyColorMatchCount];
+    setRowValidate(false);
   };
 
-  const updateRowStatus = (colorPosMatch, colorMatch) => {
-    if (!colorPosMatch && !colorMatch) return;
+  const updateRowStatus = (colorPosMatchCount, colorMatchCount) => {
+    if (!colorPosMatchCount && !colorMatchCount) return;
     const newStatusGrid = cloneDeep(gridStatus);
-    const rowStatus = createGrid(1, 4, CELL_COLOR)[0];
+    const rowStatus = createRow(COL_SIZE, INITIAL_CELL_VALUE);
 
-    while (colorPosMatch) {
-      const index = random(0, 4);
-      if (rowStatus[index] === CELL_COLOR) {
+    while (colorPosMatchCount) {
+      const index = random(0, COL_SIZE - 1);
+      if (rowStatus[index] === INITIAL_CELL_VALUE) {
         rowStatus[index] = "red";
-        colorPosMatch--;
+        colorPosMatchCount--;
       }
     }
 
-    while (colorMatch) {
-      const index = random(0, 4);
-      if (rowStatus[index] === CELL_COLOR) {
+    while (colorMatchCount) {
+      const index = random(0, COL_SIZE - 1);
+      if (rowStatus[index] === INITIAL_CELL_VALUE) {
         rowStatus[index] = "black";
-        colorMatch--;
+        colorMatchCount--;
       }
     }
 
@@ -109,10 +74,10 @@ const Game = ({ pickedColor, result }) => {
   };
 
   const resetGame = () => {
-    setGrid(createGrid(10, 4, CELL_COLOR));
-    setGridStatus(createGrid(10, 4, CELL_COLOR));
+    setGrid(createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE));
+    setGridStatus(createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE));
     setCurrentRow(0);
-    generateHiddenCode(getCode());
+    setHiddenCode(generateHiddenCode());
   };
 
   return (
@@ -120,22 +85,21 @@ const Game = ({ pickedColor, result }) => {
       {grid.map((row, rowNo) => (
         <div
           key={rowNo}
-          className={`${currentRow == rowNo ? "border-2" : "border"} ${
+          className={`${currentRow === rowNo ? "border-2" : "border"} ${
             currentRow != rowNo ? "border-gray-100" : "border-black"
           } h-14 w-full p-2 relative`}
         >
           <Row
             colors={row}
             row={rowNo}
-            picked={pickedColor}
-            getCell={changeColor}
+            onCellClick={changeColor}
             status={gridStatus[rowNo]}
             activeRow={currentRow}
           />
-          {currentRow == rowNo && rowState && (
+          {currentRow === rowNo && isRowValidate && (
             <div className="absolute left-64 inset-y-1/4">
               <img
-                onClick={checkRow}
+                onClick={validateRow}
                 src="check.svg"
                 className="h-6 cursor-pointer"
               />
