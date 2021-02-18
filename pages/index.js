@@ -31,10 +31,17 @@ const Instructions = () => {
   );
 };
 
+const Result = () => (
+  <div className="p-8 font-mono">
+    <div className="text-4xl mb-4 text-center">You Won!!!</div>
+  </div>
+);
+
 const Home = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [newGameModal, toggleNewGameModal] = useState(false);
   const [instructionModal, toggleInstructionModal] = useState(false);
+  const [resultModal, toggleResultModal] = useState(false);
 
   return (
     <div>
@@ -82,9 +89,10 @@ const Home = () => {
 
           <div className="w-full p-4">
             <div className="border border-black bg-white p-4">
-              <Game pickedColor={selectedColor} />
+              <Game pickedColor={selectedColor} result={() => toggleResultModal(true)} />
             </div>
           </div>
+          <Modal status={resultModal} info={Result} handleClose={() => toggleResultModal(false)} />
         </div>
       </div>
     </div>
