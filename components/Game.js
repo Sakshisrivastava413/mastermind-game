@@ -1,6 +1,5 @@
 import React, {
   useState,
-  useEffect,
   forwardRef,
   useImperativeHandle,
 } from "react";
@@ -33,7 +32,6 @@ const Game = forwardRef(({ selectedColor }, ref) => {
     hiddenCode: [],
   });
 
-  useEffect(() => console.log(hiddenCode), []);
   const changeColor = ({ row, col }) => {
     if (currentRow !== row) return;
 
@@ -121,16 +119,9 @@ const Game = forwardRef(({ selectedColor }, ref) => {
             onCellClick={changeColor}
             status={gridStatus[rowNo]}
             activeRow={currentRow}
+            isRowValidate={isRowValidate}
+            validateRow={validateRow}
           />
-          {currentRow === rowNo && isRowValidate && (
-            <div className="absolute left-64 inset-y-1/4">
-              <img
-                onClick={validateRow}
-                src="check.svg"
-                className="h-6 cursor-pointer"
-              />
-            </div>
-          )}
         </div>
       ))}
       <Modal isOpen={resultModal} onClose={setResultModal}>

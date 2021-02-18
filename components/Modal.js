@@ -6,7 +6,7 @@ const Modal = ({ isOpen, children, onClose }) => (
     isOpen={isOpen}
     onRequestClose={onClose}
     ariaHideApp={false}
-    className="absolute m-auto inset-0 w-112 outline-none"
+    className="absolute m-auto inset-0 w-64 lg:w-112 outline-none"
     style={{ content: { height: "max-content" } }}
   >
     <div className="relative bg-white border border-black">
