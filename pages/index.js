@@ -6,23 +6,12 @@ import Header from "../components/Header";
 import Modal from "../components/Modal";
 import useModal from "../hooks/useModal";
 import Instructions from "../components/Instructions";
-import Result from "../components/Result";
 import NewGame from "../components/NewGame";
 
 const Home = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [newGameModal, setNewGameModal] = useModal(false);
   const [instructionModal, setInstructionModal] = useModal(false);
-  const [resultModal, setResultModal] = useModal(false);
-  const [resultInfo, setResultInfo] = useState({
-    rowsCovered: 0,
-    hiddenCode: [],
-  });
-
-  const setResult = (result) => {
-    setResultInfo({ ...result });
-    setResultModal();
-  };
 
   return (
     <div>
@@ -32,9 +21,12 @@ const Home = () => {
       </Head>
 
       <Header />
-      <div className="bg-blue-200 flex justify-center">
-        <div className="bg-blue-200 w-2/4 flex">
-          <div className="p-4 w-96 pr-0 space-y-2">
+      <div
+        className="bg-blue-200 flex justify-center pt-5"
+        style={{ minHeight: "calc(100vh - 4rem)" }}
+      >
+        <div className="bg-blue-200 flex flex-wrap justify-center">
+          <div className="p-4 pr-0 w-72 space-y-2">
             <div className="bg-white border border-black">
               <ColorPalette
                 selectedColor={selectedColor}
@@ -63,14 +55,11 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="w-full p-4">
+          <div className="w-112 p-4">
             <div className="border border-black bg-white p-4">
-              <Game selectedColor={selectedColor} result={setResult} />
+              <Game selectedColor={selectedColor} />
             </div>
           </div>
-          <Modal isOpen={resultModal} onClose={setResultModal}>
-            <Result result={resultInfo} />
-          </Modal>
         </div>
       </div>
     </div>

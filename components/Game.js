@@ -7,9 +7,12 @@ import {
   getRowStatus,
   createRow,
 } from "../utils";
+import useModal from "../hooks/useModal";
 import Row from "../components/Row";
+import Modal from "./Modal";
+import Result from "./Result";
 
-const Game = ({ selectedColor, result }) => {
+const Game = ({ selectedColor }) => {
   const [grid, setGrid] = useState(
     createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE)
   );
@@ -19,7 +22,13 @@ const Game = ({ selectedColor, result }) => {
     createGrid(ROW_SIZE, COL_SIZE, INITIAL_CELL_VALUE)
   );
   const [hiddenCode, setHiddenCode] = useState(generateHiddenCode());
-useEffect(() => console.log(hiddenCode), [])
+  const [resultModal, setResultModal] = useModal(false);
+  const [resultInfo, setResultInfo] = useState({
+    rowsCovered: 0,
+    hiddenCode: [],
+  });
+
+  useEffect(() => console.log(hiddenCode), []);
   const changeColor = ({ row, col }) => {
     if (currentRow !== row) return;
 
@@ -35,10 +44,12 @@ useEffect(() => console.log(hiddenCode), [])
     const nextRow = currentRow + 1;
     const resultState = { rowsCovered: nextRow, hiddenCode };
     if (isEqual(hiddenCode, curRowState)) {
-      result({ ...resultState, isWinner: true });
+      setResultInfo({ ...resultState, isWinner: true });
+      setResultModal(true);
       resetGame();
     } else if (nextRow == ROW_SIZE) {
-      result({ ...resultState, isWinner: false });
+      setResultInfo({ ...resultState, isWinner: false });
+      setResultModal(true);
       resetGame();
     } else {
       const [colorPosMatchCount, colorMatchCount] = getRowStatus(
@@ -110,6 +121,9 @@ useEffect(() => console.log(hiddenCode), [])
           )}
         </div>
       ))}
+      <Modal isOpen={resultModal} onClose={setResultModal}>
+        <Result result={resultInfo} openNewGame={setResultModal} />
+      </Modal>
     </div>
   );
 };
