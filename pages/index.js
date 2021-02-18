@@ -7,17 +7,7 @@ import Modal from "../components/Modal";
 import useModal from "../hooks/useModal";
 import Instructions from "../components/Instructions";
 import Result from "../components/Result";
-
-const NewGame = () => {
-  return (
-    <div className="p-8 text-center">
-      <div className="text-2xl">New Game</div>
-      <div>No of rows: </div>
-      <div>No of cols: </div>
-      <div>Duplicates: </div>
-    </div>
-  );
-};
+import NewGame from "../components/NewGame";
 
 const Home = () => {
   const [selectedColor, setSelectedColor] = useState("");
