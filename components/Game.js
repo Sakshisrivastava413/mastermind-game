@@ -1,31 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Row from "../components/Row";
 import { isEqual, cloneDeep, random } from "lodash";
+import availableColors from "../colors.constant";
 
 const createGrid = (rows, cols, value) =>
   Array(rows)
     .fill(0)
     .map(() => new Array(cols).fill(0).map(() => value));
 
-const gameState = [
-  "#FC7DEF", //pink
-  "#F0B27A", //orange
-  "#CA6F1E", //brown
-  "#CACFD2", // grey
-];
+const getCode = () => {
+  const hiddenCode = [];
+  while (hiddenCode.length != 4) {
+    const color = availableColors[random(0, availableColors.length - 1)];
+    if (hiddenCode.indexOf(color) == -1) {
+      hiddenCode.push(color);
+    }
+  }
+  return hiddenCode;
+};
+
+const CELL_COLOR = "#fff";
 
 const Game = ({ pickedColor, result }) => {
-  const [grid, setGrid] = useState(createGrid(10, 4, "#fff"));
+  const [grid, setGrid] = useState(createGrid(10, 4, CELL_COLOR));
   const [currentRow, setCurrentRow] = useState(0);
   const [rowState, setRowDone] = useState(false);
-  const [gridStatus, setGridStatus] = useState(createGrid(10, 4, "#fff"));
+  const [gridStatus, setGridStatus] = useState(createGrid(10, 4, CELL_COLOR));
+  const [hiddenCode, generateHiddenCode] = useState(getCode());
 
   const changeColor = ({ row, col }) => {
     if (currentRow == row) {
       const newGrid = cloneDeep(grid);
       newGrid[row][col] = pickedColor;
       setGrid(newGrid);
-      if (newGrid[currentRow].indexOf("#fff") == -1) setRowDone(true);
+      if (newGrid[currentRow].indexOf(CELL_COLOR) == -1) setRowDone(true);
     }
   };
 
@@ -43,19 +51,21 @@ const Game = ({ pickedColor, result }) => {
     let onlyColorMatchCount = 0;
     const colorFreq = new Map();
 
-    if (isEqual(gameState, curRow) || nextRow == 10) {
+    if (isEqual(hiddenCode, curRow) || nextRow == 10) {
       result();
       resetGame();
     } else {
       setCurrentRow(nextRow);
 
       curRow.forEach((color, col) => {
-        const gameStateColor = gameState[col];
-        if (gameStateColor === color) colorAndPositionMatchCount++;
+        const hiddenCodeColor = hiddenCode[col];
+        if (hiddenCodeColor === color) colorAndPositionMatchCount++;
         else
           colorFreq.set(
-            gameStateColor,
-            colorFreq.has(gameStateColor) ? colorFreq.get(gameStateColor) + 1 : 1
+            hiddenCodeColor,
+            colorFreq.has(hiddenCodeColor)
+              ? colorFreq.get(hiddenCodeColor) + 1
+              : 1
           );
       });
 
@@ -63,7 +73,7 @@ const Game = ({ pickedColor, result }) => {
         if (
           colorFreq.has(color) &&
           colorFreq.get(color) > 0 &&
-          color != gameState[col]
+          color != hiddenCode[col]
         ) {
           colorFreq.set(color, colorFreq.get(color) - 1);
           onlyColorMatchCount++;
@@ -74,22 +84,22 @@ const Game = ({ pickedColor, result }) => {
   };
 
   const updateRowStatus = (colorPosMatch, colorMatch) => {
-    if(!colorPosMatch && !colorMatch) return;
+    if (!colorPosMatch && !colorMatch) return;
     const newStatusGrid = cloneDeep(gridStatus);
-    const rowStatus = createGrid(1, 4, '#fff')[0];
+    const rowStatus = createGrid(1, 4, CELL_COLOR)[0];
 
-    while(colorPosMatch) {
+    while (colorPosMatch) {
       const index = random(0, 4);
-      if(rowStatus[index] === '#fff') {
-        rowStatus[index] = 'red';
+      if (rowStatus[index] === CELL_COLOR) {
+        rowStatus[index] = "red";
         colorPosMatch--;
       }
     }
 
-    while(colorMatch) {
+    while (colorMatch) {
       const index = random(0, 4);
-      if(rowStatus[index] === '#fff') {
-        rowStatus[index] = 'black';
+      if (rowStatus[index] === CELL_COLOR) {
+        rowStatus[index] = "black";
         colorMatch--;
       }
     }
@@ -99,9 +109,10 @@ const Game = ({ pickedColor, result }) => {
   };
 
   const resetGame = () => {
-    setGrid(createGrid(10, 4, "#fff"));
-    setGridStatus(createGrid(10, 4, "#fff"));
+    setGrid(createGrid(10, 4, CELL_COLOR));
+    setGridStatus(createGrid(10, 4, CELL_COLOR));
     setCurrentRow(0);
+    generateHiddenCode(getCode());
   };
 
   return (
